@@ -1,28 +1,13 @@
-name: Deploy
-
-on:
-  push:
-    branches:
-      - main
-
+name: Deploy to Fly
+on: [push]
 jobs:
   deploy:
+    name: Deploy proxy
     runs-on: ubuntu-latest
-
     steps:
+      # This step checks out a copy of your repository.
       - uses: actions/checkout@v2
-
-      - name: Set up Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: "3.8"
-
-      - name: Install dependencies
-        run: |
-          curl -sSL https://install.python-poetry.org | python3 -
-          poetry install
-
-      - name: Deploy to fly.io
-        run: fly deploy
+      - uses: superfly/flyctl-actions/setup-flyctl@master
+      - run: flyctl deploy --remote-only
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
