@@ -1,7 +1,6 @@
 from fastapi import FastAPI, HTTPException
 from .models import Article
 from typing import List
-import random
 import sqlite3
 
 app = FastAPI()
@@ -33,25 +32,14 @@ def get_random_article():
     conn = sqlite3.connect(DATABASE)
     cursor = conn.cursor()
 
-    # Get total count of articles
-    cursor.execute("SELECT COUNT(1) FROM articles")
-    count = cursor.fetchone()[0]
-
-    if count == 0:
-        conn.close()
-        raise HTTPException(status_code=404, detail="No articles found")
-
-    # Fetch one random article based on a random rowid
-    random_id = random.randint(1, count)
     cursor.execute(
-        "SELECT article_id, article_url, article_title, cover_image, article_date FROM articles WHERE rowid = ?",
-        (random_id,),
+        "SELECT article_id, article_url, article_title, cover_image, article_date FROM articles ORDER BY RANDOM() LIMIT 1"
     )
     row = cursor.fetchone()
     conn.close()
 
     if row is None:
-        raise HTTPException(status_code=404, detail="Article not found")
+        raise HTTPException(status_code=404, detail="No articles found")
 
     return Article(
         article_id=row[0],
