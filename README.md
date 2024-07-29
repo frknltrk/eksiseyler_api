@@ -14,7 +14,7 @@ $ curl -X GET https://eksiseyler-api.fly.dev/articles/random
 $ curl -X GET https://eksiseyler-api.fly.dev/articles
 ```
 
-## Build
+## Build & Run
 
 ```bash
 $ git clone https://github.com/frknltrk/eksiseyler_api.git && cd eksiseyler_api/
@@ -53,6 +53,7 @@ $ poetry run fastpi run eksiseyler_api/main.py
 
 ### Useful Resources
 
+- https://docs.docker.com/samples/
 - https://docs.pydantic.dev/latest/api/config/#pydantic.config
 - https://stackoverflow.com/questions/2279706/select-random-row-from-a-sqlite-table
 
