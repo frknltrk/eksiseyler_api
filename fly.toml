@@ -19,3 +19,7 @@ app = 'eksiseyler-api'
   memory = '1gb'
   cpu_kind = 'shared'
   cpus = 1
+
+[processes]
+  app = '/app/.venv/bin/fastapi run eksiseyler_api/main.py'
+  cron = 'supercronic /app/crontab'
