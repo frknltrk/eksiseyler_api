@@ -30,6 +30,21 @@ def setup_database():
         conn.close()
 
 
+def count_rows():
+    try:
+        conn = sqlite3.connect("data/eksiseyler.db")
+        cursor = conn.cursor()
+        cursor.execute("SELECT COUNT(*) FROM articles")
+        count = cursor.fetchone()[0]
+        logging.info(f"Total number of rows in 'articles' table: {count}")
+        return count
+    except sqlite3.Error as e:
+        logging.error(f"Error counting rows: {e}")
+        return 0
+    finally:
+        conn.close()
+
+
 def insert_articles(articles):
     logging.info(f"Inserting {len(articles)} articles into the database.")
     logging.debug(f"Articles to be inserted: {articles}")
@@ -53,8 +68,12 @@ def run_etl():
     logging.info("Starting ETL process.")
     setup_database()
     try:
+        logging.info("Counting rows before insert.")
+        count_rows()
         articles = scrape_articles()
         insert_articles(articles)
+        logging.info("Counting rows after insert.")
+        count_rows()
     except Exception as e:
         logging.error(f"ETL process failed: {e}")
     logging.info("ETL process completed.")
