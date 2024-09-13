@@ -108,6 +108,7 @@ def run_initial_etl():
         count_rows()
     logging.info("Initial ETL process completed.")
 
-if __name__ == "__main__":
-    # Uncomment the below line to set up the database and run the initial ETL process when the server (cron) starts
+
+# Uncomment the below lines to reset the database and run the initial ETL process when the server (cron) starts
+# if __name__ == "__main__":
     # run_initial_etl()
