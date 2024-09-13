@@ -1,1 +1,1 @@
-0 0 * * * poetry run python /app/etl/etl.py
+0 0 * * * /app/.venv/bin/python /app/etl/run_daily_etl.py

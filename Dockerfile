@@ -2,6 +2,7 @@ FROM python:3.8-bookworm AS builder
 
 WORKDIR /app
 
+RUN apt-get update && apt-get install -y libpq-dev
 RUN pip install poetry
 RUN poetry config virtualenvs.in-project true
 COPY pyproject.toml poetry.lock ./
@@ -26,7 +27,6 @@ COPY --from=builder /app/.venv .venv/
 COPY . .
 COPY --from=builder /usr/local/bin/supercronic /usr/local/bin/supercronic
 
-# Install Poetry in the final image
-RUN pip install poetry
+#ENV DATABASE_URL=postgres://username:password@hostname:port/dbname
 
-CMD ["/app/.venv/bin/fastapi", "run", "eksiseyler_api/main.py"]
+CMD /app/.venv/bin/python etl/etl.py && supercronic /app/crontab && /app/.venv/bin/fastapi run api/main.py

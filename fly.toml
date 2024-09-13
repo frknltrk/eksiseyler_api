@@ -21,5 +21,5 @@ app = 'eksiseyler-api'
   cpus = 1
 
 [processes]
-  app = '/app/.venv/bin/fastapi run eksiseyler_api/main.py'
-  cron = 'supercronic /app/crontab'
+  app = '/app/.venv/bin/fastapi run api/main.py'
+  cron = '/app/.venv/bin/python etl/etl.py && supercronic /app/crontab'

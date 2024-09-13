@@ -11,28 +11,17 @@ $ curl -X GET https://eksiseyler-api.fly.dev/articles/random
 ### All Articles
 
 ```bash
-$ curl -X GET https://eksiseyler-api.fly.dev/articles
+$ curl -X GET https://eksiseyler-api.fly.dev/articles/all
 ```
 
 ## Build & Run
 
 ```bash
 $ git clone https://github.com/frknltrk/eksiseyler_api.git && cd eksiseyler_api/
-```
-
-### Using Docker
-
-```bash
+# uncomment and update the DATABASE_URL environment variable in the Dockerfile with your postgres db credentials
+# uncomment the line `# run_initial_etl()` in the etl.py file
 $ docker build
 $ docker run
-```
-
-### Locally
-
-```bash
-$ pipx install poetry
-$ poetry install
-$ poetry run fastpi run eksiseyler_api/main.py
 ```
 
 ## Deploy
