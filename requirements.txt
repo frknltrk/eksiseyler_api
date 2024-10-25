@@ -1,3 +1,6 @@
 fastapi[standard]
 psycopg[pool]
 pydantic
+requests
+lxml
+beautifulsoup4
