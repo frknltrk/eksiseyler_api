@@ -69,7 +69,12 @@ By default, it will run on `http://127.0.0.1:8000`.
 
 ### Docker
 
-To build and run the application using Docker, refer to the FastAPI documentation [here](https://fastapi.tiangolo.com/deployment/docker/#build-the-docker-image).
+```bash
+docker build -t eksiseyler-img .
+docker run -d --name eksiseyler -p 8000:8000 eksiseyler-img -e DATABASE_URL=your_database_url
+```
+
+For more details, refer to the FastAPI documentation [here](https://fastapi.tiangolo.com/deployment/docker/#build-the-docker-image).
 
 ### Fly.io
 
@@ -78,7 +83,7 @@ To deploy using Fly.io, ensure your `fly.toml` is configured correctly. Key sett
 - `app`: Name of your app.
 - `primary_region`: Example set to `'ams'` for Amsterdam.
 
-Refer to the [Fly.io configuration documentation](https://fly.io/docs/reference/configuration/) for more details.
+Refer to the [Crontab with Supercronic](https://fly.io/docs/blueprints/supercronic/) and [App configuration (fly.toml)](https://fly.io/docs/reference/configuration/) for more details.
 
 ## License
 

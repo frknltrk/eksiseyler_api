@@ -16,8 +16,12 @@ RUN curl -fsSLO "$SUPERCRONIC_URL" \
 COPY ./etl /code/etl
 COPY ./app /code/app
 COPY ./requirements.txt /code/requirements.txt
+COPY ./start.sh /code/start.sh
 
 RUN pip install --upgrade pip
 RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
 
-CMD ["start"]
+RUN apt-get update && apt-get install -y cron
+RUN chmod +x /code/start.sh
+
+CMD ["/code/start.sh"]
