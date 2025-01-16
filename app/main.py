@@ -8,7 +8,12 @@ app = FastAPI()
 
 # Use connection pooling
 DATABASE_URL = os.getenv("DATABASE_URL")
-pool = psycopg_pool.ConnectionPool(DATABASE_URL)
+pool = psycopg_pool.ConnectionPool(
+    DATABASE_URL,
+    min_size=1,  # Minimum connections
+    max_size=10,  # Maximum connections
+    timeout=10,  # Adjust timeout to handle slow startups
+)
 
 class Article(BaseModel):
     article_url: str
@@ -38,4 +43,11 @@ def read_random_article(db=Depends(get_db)):
 
 @app.get("/health")
 def health_check():
-    return {"status": "healthy"}
+    try:
+        with pool.connection() as conn:
+            with conn.cursor() as cur:
+                cur.execute("SELECT 1")
+        return {"status": "healthy"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Database error: {str(e)}")
+
