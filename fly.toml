@@ -10,7 +10,11 @@ primary_region = 'ams'
 
 [processes]
   web = "fastapi run app/main.py"
+<<<<<<< HEAD
   cron = "sh -c 'python etl/scraper.py --max-pages 1 && supercronic etl/crontab'" # 'sh -c' is necessary to run multiple commands in a single process
+=======
+  cron = "sh -c 'python etl/scraper.py --max-pages 0 && supercronic etl/crontab'" # 'sh -c' is necessary to run multiple commands in a single process
+>>>>>>> 3ce1e4bb823077d0a4508503bbc90952d58e3408
 
 [http_service]
   internal_port = 8000
