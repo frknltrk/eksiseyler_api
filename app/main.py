@@ -6,9 +6,9 @@ from typing import List
 app = FastAPI()
 
 # Use connection pooling
-DATABASE_URL = os.getenv("DATABASE_URL")
+POSTGRES_ENDPOINT = os.getenv("POSTGRES_DB_ENDPOINT_URL")
 pool = psycopg_pool.ConnectionPool(
-    DATABASE_URL,
+    POSTGRES_DB_ENDPOINT_URL,
     min_size=1,  # Minimum connections
     max_size=10,  # Maximum connections
     timeout=10,  # Adjust timeout to handle slow startups

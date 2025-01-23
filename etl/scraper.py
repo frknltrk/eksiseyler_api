@@ -65,9 +65,9 @@ def transform(data):
 
 
 def export_data_to_postgres(data):
-    db_url = os.getenv("DATABASE_URL")
+    db_url = os.getenv("POSTGRES_DB_ENDPOINT_URL")
     if not db_url:
-        raise ValueError("DATABASE_URL environment variable is not set")
+        raise ValueError("POSTGRES_DB_ENDPOINT_URL environment variable is not set")
 
     with psycopg.connect(db_url) as conn:
         with conn.cursor() as cur:
