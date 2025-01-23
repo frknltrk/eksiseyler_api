@@ -36,11 +36,23 @@ Eksiseyler API is a FastAPI-based application for fetching and managing article 
    pip install -r requirements.txt
    ```
 
+## POSTGRES Database Setup
+
+```sql
+CREATE DATABASE eksiseyler;
+CREATE TABLE articles (
+    article_url TEXT PRIMARY KEY,
+    article_title TEXT NOT NULL,
+    cover_image TEXT,
+    scraped_at TIMESTAMP NOT NULL DEFAULT NOW()
+);
+```
+
 ## Environment Variables
 
 Ensure that the following environment variable is set:
 
-- `DATABASE_URL`: The connection URL for your PostgreSQL database.
+- `POSTGRES_DB_ENDPOINT_URL`: The connection URL for your PostgreSQL database.
 
 ## Running the Application
 
@@ -71,7 +83,7 @@ By default, it will run on `http://127.0.0.1:8000`.
 
 ```bash
 docker build -t eksiseyler-img .
-docker run -d --name eksiseyler -p 8000:8000 eksiseyler-img -e DATABASE_URL=your_database_url
+docker run -d --name eksiseyler -p 8000:8000 eksiseyler-img -e POSTGRES_DB_ENDPOINT_URL=your_postgres_database_endpoint_url
 ```
 
 For more details, refer to the FastAPI documentation [here](https://fastapi.tiangolo.com/deployment/docker/#build-the-docker-image).
