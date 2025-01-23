@@ -36,6 +36,18 @@ Eksiseyler API is a FastAPI-based application for fetching and managing article 
    pip install -r requirements.txt
    ```
 
+## Database Setup
+
+```sql
+CREATE DATABASE eksiseyler;
+CREATE TABLE articles (
+    article_url TEXT PRIMARY KEY,
+    article_title TEXT NOT NULL,
+    cover_image TEXT,
+    scraped_at TIMESTAMP NOT NULL DEFAULT NOW()
+);
+```
+
 ## Environment Variables
 
 Ensure that the following environment variable is set:
