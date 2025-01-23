@@ -1,6 +1,4 @@
-import os, time, logging, requests, psycopg
-from datetime import datetime
-from urllib.parse import urlparse
+import os, time, logging, requests, psycopg, argparse, datetime
 from bs4 import BeautifulSoup
 
 # Setup logging
@@ -8,7 +6,8 @@ logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
 )
 
-def scrape_articles(max_pages=1):
+
+def scrape_articles(max_pages):
     base_url = "https://eksiseyler.com/"
     load_more_url = "https://eksiseyler.com/Home/PartialLoadMore"
     headers = {
@@ -58,30 +57,25 @@ def scrape_articles(max_pages=1):
     logging.info(f"Total articles scraped: {len(articles)}")
     return list(articles.values())
 
+
 def transform(data):
     for article in data:
-        article['scraped_at'] = datetime.now().isoformat()
+        article["scraped_at"] = datetime.datetime.now().isoformat()
     return data
 
+
 def export_data_to_postgres(data):
-    db_url = os.getenv('DATABASE_URL')
+    db_url = os.getenv("DATABASE_URL")
     if not db_url:
         raise ValueError("DATABASE_URL environment variable is not set")
 
-    parsed_url = urlparse(db_url)
-
-    with psycopg.connect(
-        dbname='eksiseyler',
-        user=parsed_url.username,
-        password=parsed_url.password,
-        host=parsed_url.hostname,
-        port=parsed_url.port
-    ) as conn:
+    with psycopg.connect(db_url) as conn:
         with conn.cursor() as cur:
 
             # Upsert articles into the table
             for article in data:
-                cur.execute("""
+                cur.execute(
+                    """
                     INSERT INTO articles (article_url, article_title, cover_image, scraped_at)
                     VALUES (%s, %s, %s, %s)
                     ON CONFLICT (article_url)
@@ -89,11 +83,29 @@ def export_data_to_postgres(data):
                         article_title = EXCLUDED.article_title,
                         cover_image = EXCLUDED.cover_image,
                         scraped_at = EXCLUDED.scraped_at
-                """, (article['article_url'], article['article_title'], article['cover_image'], article['scraped_at']))
+                """,
+                    (
+                        article["article_url"],
+                        article["article_title"],
+                        article["cover_image"],
+                        article["scraped_at"],
+                    ),
+                )
 
         logging.info("Data export completed successfully.")
 
+
 if __name__ == "__main__":
-    articles = scrape_articles(max_pages=1)
+    parser = argparse.ArgumentParser(description="Scrape articles from eksiseyler.com")
+    parser.add_argument(
+        "--max-pages",
+        type=int,
+        help="Maximum number of pages to scrape. Default is 1. Use 0 for all pages.",
+        default=1,
+    )
+
+    args = parser.parse_args()
+
+    articles = scrape_articles(max_pages=args.max_pages if args.max_pages > 0 else None)
     transformed_data = transform(articles)
     export_data_to_postgres(transformed_data)
